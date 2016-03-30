@@ -1,0 +1,9 @@
+body {font-family: 'Arial'}
+#page {width: 800px;margin: 0 auto;}
+#head_titre {height:80px;font-size: 24px;text-align: center;}
+#game {}
+#game_options {height:40px;}
+#game_reponse {clear:both;}
+.une_option {float:left;padding:2px;width:20px;margin:0 5px;border:1px solid black;border-radius:3px;font-size:18px;text-align:center;
+  text-transform: uppercase;}
+.input_reponse {}
