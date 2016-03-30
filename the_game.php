@@ -21,8 +21,8 @@ function load_bdd() {
 }
 
 function load_random_mot($lexique) {
-  return str_split($lexique[2]); //debug line for word "abaisse"
-  //return str_split($lexique[rand(0, count($lexique))]);
+  //return str_split($lexique[2]); //debug line for word "abaisse"
+  return str_split($lexique[rand(0, count($lexique))]);
 }
 
 function valider_reponse() {
