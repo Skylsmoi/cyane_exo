@@ -1,13 +1,23 @@
 <?php
+session_start();
 
 if (isset($_GET["action"])) {
-  $liste_actions = ['valider_reponse'];
+  $liste_actions = ['valider_reponse','creation_login','login', 'logout'];
   $action = htmlspecialchars($_GET["action"]);
 
   if (!in_array($action, $liste_actions)) {
     header('location: index.php?erreur=-1'); // action inconnue
   } else {
     switch ($action) {
+      case 'creation_login':
+        creation_utilisateur();
+        break;
+      case 'login':
+        login_user();
+        break;
+      case 'logout':
+        logout_user();
+        break;
       case 'valider_reponse':
         valider_reponse();
         break;
@@ -15,13 +25,14 @@ if (isset($_GET["action"])) {
   }
 }
 
+
 function load_bdd() {
   $file = "db/lexique.json";
   return json_decode(file_get_contents($file));
 }
 
 function load_random_mot($lexique) {
-  //return str_split($lexique[2]); //debug line for word "abaisse"
+  //return str_split($lexique[2]); // ligne de debug pour le mot "abaisse"
   return str_split($lexique[rand(0, count($lexique))]);
 }
 
@@ -90,6 +101,82 @@ function valider_caracteres($rep, $mot) {
   }
 
   return 1; // si la boucle s'est terminée sans passer par un return, alors le mot de l'utilisateur respecte les conditions
+}
+
+function creation_utilisateur() {
+  if (!isset($_POST['login']) || !isset($_POST['mdp']) || !isset($_POST['mdp_verif'])) {
+    header('location: index.php?erreur_log=-1'); // erreur de param
+    die();
+  }
+
+  $log = htmlspecialchars($_POST['login']);
+  $mdp = htmlspecialchars($_POST['mdp']);
+  $mdp_verif = htmlspecialchars($_POST['mdp_verif']);
+
+  if ($mdp !== $mdp_verif) {
+    header('location: index.php?erreur_log=-2'); // erreur verif mdp invalide
+    die();
+  }
+
+  require_once('users.php');
+
+  if (utilisateur_existe($log)) {
+    header('location: index.php?new_user&erreur_log=-3');
+    die();
+  }
+
+  $rez = creer_utilisateur($log, $mdp);
+  switch ($rez) {
+    case 1:
+      $_SESSION['utilisateur'] = $log;
+      header('location: index.php?erreur_log=1');
+      break;
+    case -1:
+      header('location: index.php?new_user&erreur_log=-4');
+      break;
+    case -2:
+      header('location: index.php?new_user&erreur_log=-5');
+      break;
+  }
+}
+
+//@TODO test and finish me
+function login_user() {
+  if (isset($_SESSION['utilisateur'])) {
+    header('location: index.php?erreur_log=-1'); // erreur, déjà logué
+    die();
+  }
+
+  if (!isset($_POST['login']) || !isset($_POST['mdp'])) {
+    header('location: index.php?erreur_log=-2'); // erreur de paramètres
+  } else {
+    $log = htmlspecialchars($_POST['login']);
+    $mdp = htmlspecialchars($_POST['mdp']);
+
+    require_once('users.php');
+    echo 'woot';
+    if ($result = valider_login_mdp($log, $mdp) === 1) {
+      echo '1';
+      $_SESSION['utilisateur'] = $log;
+      header('location: index.php');
+    } else if ($result == 0) {
+      echo '2';
+      header('location: index.php?erreur_log=-7');
+    } else if ($result === -1) {
+      echo '3';
+      header('location: index.php?erreur_log=-8');
+    }
+    var_dump($result);
+  }
+}
+
+function logout_user() {
+  if (isset($_SESSION['utilisateur'])) {
+    unset($_SESSION['utilisateur']);
+    header('location: index.php?erreur_log=2');
+  } else {
+    header('location: index.php?erreur_log=-6');
+  }
 }
 
 

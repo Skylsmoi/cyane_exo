@@ -1,9 +1,80 @@
-body {font-family: 'Arial'}
-#page {width: 800px;margin: 0 auto;}
-#head_titre {height:80px;font-size: 24px;text-align: center;}
-#game {}
-#game_options {height:40px;}
-#game_reponse {clear:both;}
-.une_option {float:left;padding:2px;width:20px;margin:0 5px;border:1px solid black;border-radius:3px;font-size:18px;text-align:center;
-  text-transform: uppercase;}
+body {
+  font-family: 'Arial';
+}
+#page {
+  width: 800px;
+  margin: 0 auto;
+}
+#head_titre {
+  height: 80px;
+  font-size: 24px;
+  text-align: center;
+}
+#login {
+  width: 270px;
+  margin: 0 auto;
+}
+#login_form {
+  width: 270px;
+  height: 100px;
+}
+.login_title {
+  margin: 0 0 25px;
+  text-align: center;
+}
+.login_title_msg {
+  font-size:10px;
+}
+#creation_login {
+  width: 270px;
+  height: 120px;
+}
+#login_form label,
+#creation_login label {
+  width: 110px;
+  float: left;
+  height: 25px;
+  margin-top: 5px;
+  clear: both;
+  text-align: right;
+}
+#login_form input[type="text"], #login_form input[type="password"],
+#creation_login input[type="text"], #creation_login input[type="password"] {
+  width: 150px;
+  float: right;
+}
+#login_form input[type="submit"],
+#creation_login input[type="submit"] {
+  float:right;
+}
+#login_connecte {
+  text-align: right;
+}
+#login_message {
+  text-align: center;
+  margin: 0px 0px 75px;
+}
+#game {
+  margin: 40px 0;
+  text-align: center;
+}
+#game_options {
+  display: inline-block;
+  margin: 0 auto;
+  height: 40px;
+}
+#game_reponse {
+  clear: both;
+}
+.une_option {
+  float: left;
+  width: 20px;
+  margin: 0 5px;
+  padding: 2px;
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+}
 .input_reponse {}
