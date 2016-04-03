@@ -68,7 +68,7 @@
 <?php } ?>
 
     </div>
-    
+
     <div id="login_message">
       <div class="erreur">
 <?php
@@ -164,6 +164,12 @@
         break;
       case -5:
         echo 'Ton mot n\'existe pas dans le lexique, tu n\'as gagné aucun point.';
+        break;
+      case -6:
+        echo 'Erreur, tu n\'es pas logué';
+        break;
+      case -7:
+        echo 'Erreur de sauvegarde de tes statistiques.';
         break;
     }
   }

@@ -37,15 +37,26 @@ function load_random_mot($lexique) {
 }
 
 function valider_reponse() {
+  if (!isset($_SESSION['utilisateur']) || $_SESSION['utilisateur'] == "") {
+    header('location: index.php?erreur=-6');
+    die();
+  }
+
   if (!isset($_POST['reponse']) || !isset($_POST['mot_ordonne'])) {
     header('location: index.php?erreur=-2'); // erreur de paramètres
   } else {
     $reponse = htmlspecialchars($_POST["reponse"]);
     $mot_ordonne = htmlspecialchars($_POST["mot_ordonne"]);
+    
+    require_once('users.php');
 
     if ($reponse === $mot_ordonne) {
       $nb_pts = strlen($reponse)+10;
-      header('location: index.php?info=1&nb_pts='.$nb_pts); // mot trouvé
+
+      $rez = ajouter_points_utilisateur($_SESSION['utilisateur'], $nb_pts);
+      if ($rez == 1) header('location: index.php?info=1&nb_pts='.$nb_pts); // mot trouvé
+      else header('location: index.php?info=1&erreur=-7&&nb_pts='.$nb_pts); 
+      
     } else {
       $validation = valider_caracteres($reponse, $mot_ordonne);
 
@@ -54,9 +65,14 @@ function valider_reponse() {
         case -1: header('location: index.php?erreur=-4');break; // lettre inexistante dans le mot proposé
         case 1:
           $lexique = load_bdd();
+
           if (in_array($reponse, $lexique)) {
             $nb_pts = strlen($reponse);
-            header('location: index.php?info=2&nb_pts='.$nb_pts); // mot différent du mot proposé mais valide
+            $rez = ajouter_points_utilisateur($_SESSION['utilisateur'], $nb_pts);
+
+            if ($rez == 1) header('location: index.php?info=2&nb_pts='.$nb_pts); // mot différent du mot proposé mais valide
+            else header('location: index.php?info=2&erreur=-7&&nb_pts='.$nb_pts);
+
           } else  header('location: index.php?erreur=-5'); // mot inexistant dans la base
           break;
       }
@@ -140,7 +156,6 @@ function creation_utilisateur() {
   }
 }
 
-//@TODO test and finish me
 function login_user() {
   if (isset($_SESSION['utilisateur'])) {
     header('location: index.php?erreur_log=-1'); // erreur, déjà logué

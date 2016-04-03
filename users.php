@@ -9,7 +9,7 @@ function load_bdd_utilisateurs_json() {
 function creer_utilisateur($log, $mdp) {
   // on ouvre le fichier utilisateurs en mode "a", write only, ce qui place la tête de lecture en fin de fichier
   if (($handle = fopen("db/utilisateurs.csv", "a")) !== FALSE) {
-    if (fputcsv($handle, array($log, $mdp)) != FALSE) {
+    if (fputcsv($handle, array($log, $mdp, 0, 0, 0)) != FALSE) {
       fclose($handle);
       return 1;
     } else return -2; //erreur, impossible d'écrire dans le fichier d'utilisateurs
@@ -57,7 +57,40 @@ function valider_login_mdp($log, $mdp) {
     }
     fclose($handle);
     return 0;
-  } return -1;
+  } else return -1;
+}
+
+
+/*
+structure du csv :
+0 : login,
+1 : mdp,
+2 : nb_parties,
+3 : nb_abandons,
+4 : meilleur_score
+*/
+function ajouter_points_utilisateur($log, $nb_pts) {
+  if (($handle = fopen("db/utilisateurs.csv", "r")) !== FALSE) {
+    $new_db = array();
+    while (($data = fgetcsv($handle, 50)) !== FALSE) {
+
+      if ($data[0] === $log) {
+        $data[2]++; // on ajoute 1 au nombre de parties jouées
+        if ($nb_pts > $data[4]) $data[4] = $nb_pts; // on assigne le meilleur score
+      }
+      
+      array_push($new_db, $data);
+    }
+    fclose($handle);
+
+    $handle = fopen("db/utilisateurs.csv", "w");
+    foreach ($new_db as $i => $val) {
+      fputcsv($handle, $new_db[$i]);
+    }
+    fclose($handle);
+
+    return 1;
+  } else return -1;
 }
 
 ?>
