@@ -43,7 +43,7 @@
       <div class="login_title">
         Tu es connecté au compte de <?php echo $_SESSION['utilisateur'] ?>.<br />
       </div>
-      <form id="login_connecte" action="the_game.php?action=logout" id="logout" method="post">
+      <form id="login_connecte" action="the_game.php?action=logout" method="post">
         <input type="submit" value="Déconnexion" />
       </form>
 
@@ -112,37 +112,56 @@
     </div>
 
     <div id="game">
+
       <div id="game_options">
 
 <?php
-  $new_mot = load_random_mot($lexique); //charge un mot de la bdd
-  $new_mot_ordonne = $new_mot; //sauvegarde dans une autre variable le mot encore ordonné
-  shuffle($new_mot); // désordonne le mot
-  $nb_lettres = count($new_mot); // compte le nombre de caractères du mot
-  for ($i = 0; $i < $nb_lettres; $i++) {
-    echo  '
-        <div class="une_option">'.$new_mot[$i].'</div>';
+  if (!isset($_GET['solution'])) { //si le joueur a cliqué sur abandonné, on n'affiche pas de nouvelle partie
+    $new_mot = load_random_mot($lexique); //charge un mot de la bdd
+    $new_mot_ordonne = $new_mot; //sauvegarde dans une autre variable le mot encore ordonné
+    shuffle($new_mot); // désordonne le mot
+    $nb_lettres = count($new_mot); // compte le nombre de caractères du mot
+    for ($i = 0; $i < $nb_lettres; $i++) {
+      echo  '
+          <div class="une_option">'.$new_mot[$i].'</div>';
+    }
   }
 ?>
 
       </div>
       <div id="game_reponse">
 
-        <form action="the_game.php?action=valider_reponse" method="post">
-          <input type="text" class="input_reponse" name="reponse" value="Ta réponse..." maxlength="50" />
-          <input type="hidden" name="mot_ordonne" value="<?php echo implode($new_mot_ordonne); ?>" />
+<?php if (!isset($_GET['solution'])) { //si le joueur a cliqué sur abandonné, on n'affiche pas de nouvelle partie ?>
 
-<?php if (isset($_SESSION['utilisateur'])) { ?>
+        <form action="the_game.php?action=valider_abandonner" method="post">
+          <label for="input_reponse">Ta réponse : </label>
+          <input id="input_reponse" type="text" class="input_reponse" name="reponse" value="" maxlength="50" />
+          <input type="hidden" name="mot_ordonne" value="<?php echo implode($new_mot_ordonne); ?>" /><br />
 
-          <input type="submit" value="Valider" />
+          <div class="game_reponse_btns">
+            
+<?php   if (isset($_SESSION['utilisateur'])) { ?>
 
-<?php } else { ?>
+            <input type="submit" name="btn_abandonner" value="Abandonner" />
+            <input type="submit" name="btn_valider" value="Valider" />
 
-          <input type="submit" value="Connecte toi pour jouer" disabled />
+<?php   } else { ?>
 
-<?php } ?>
+            <input type="submit" name="btn_abandonner" value="Abandonner" disabled />
+            <input type="submit" name="btn_valider" value="Connecte toi pour jouer" disabled />
+
+<?php   } // if (isset($_SESSION['utilisateur'])) ?>
+          </div>
 
         </form>
+
+<?php } else { // fin if (!isset($_GET['solution'])) ?>
+
+        <form action="the_game.php?action=rejouer" id="rejouer" method="post">
+          <input type="submit" value="Rejouer" />
+        </form>
+
+<?php } ?>
 
         <div id="game_message">
           <div class="erreur">
@@ -154,7 +173,7 @@
         echo 'Erreur interne, action invalide';
         break;
       case -2:
-        echo 'Erreur interne, données du formulaire enovyées invalide. Requis : $_POST["reponse"] et $_POST["mot_ordonne"]';
+        echo 'Erreur interne, données du formulaire enovyées invalide.';
         break;
       case -3:
         echo 'Une lettre est utilisée trop souvent, ton mot est invalide, tu n\'as gagné aucun point.';
@@ -187,6 +206,9 @@
       case 2:
         $nb_pts = htmlspecialchars($_GET['nb_pts']);
         echo 'Ce n\'est pas le mot proposé mais ton mot est valide. Tu as gagné '.$nb_pts.' pts.';
+        break;
+      case 3:
+        echo 'La bonne réponse était : '.htmlspecialchars($_GET['solution']);
         break;
     }
   }

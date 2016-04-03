@@ -66,6 +66,15 @@ body {
 #game_reponse {
   clear: both;
 }
+.game_reponse_btns {
+  margin: 15px 0 15px;
+}
+.game_reponse_btns input[name="btn_valider"] {
+  margin-left: 135px;
+}
+#rejouer {
+  margin-bottom: 15px;
+}
 .une_option {
   float: left;
   width: 20px;

@@ -72,18 +72,39 @@ structure du csv :
 function ajouter_points_utilisateur($log, $nb_pts) {
   if (($handle = fopen("db/utilisateurs.csv", "r")) !== FALSE) {
     $new_db = array();
-    while (($data = fgetcsv($handle, 50)) !== FALSE) {
 
+    while (($data = fgetcsv($handle, 50)) !== FALSE) {
       if ($data[0] === $log) {
         $data[2]++; // on ajoute 1 au nombre de parties jouées
         if ($nb_pts > $data[4]) $data[4] = $nb_pts; // on assigne le meilleur score
       }
-      
       array_push($new_db, $data);
     }
     fclose($handle);
 
     $handle = fopen("db/utilisateurs.csv", "w");
+
+    foreach ($new_db as $i => $val) {
+      fputcsv($handle, $new_db[$i]);
+    }
+    fclose($handle);
+
+    return 1;
+  } else return -1;
+}
+
+function ajouter_abandon_utilisateur($log) {
+  if (($handle = fopen("db/utilisateurs.csv", "r")) !== FALSE) {
+    $new_db = array();
+
+    while (($data = fgetcsv($handle, 50)) !== FALSE) {
+      if ($data[0] === $log) $data[3]++; // on ajoute 1 au nombre de parties abandonnées
+      array_push($new_db, $data);
+    }
+    fclose($handle);
+
+    $handle = fopen("db/utilisateurs.csv", "w");
+
     foreach ($new_db as $i => $val) {
       fputcsv($handle, $new_db[$i]);
     }

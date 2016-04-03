@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_GET["action"])) {
-  $liste_actions = ['valider_reponse','creation_login','login', 'logout'];
+  $liste_actions = ['valider_abandonner','creation_login','login', 'logout', 'rejouer'];
   $action = htmlspecialchars($_GET["action"]);
 
   if (!in_array($action, $liste_actions)) {
@@ -18,8 +18,13 @@ if (isset($_GET["action"])) {
       case 'logout':
         logout_user();
         break;
-      case 'valider_reponse':
-        valider_reponse();
+      case 'valider_abandonner':
+        if (isset($_POST['btn_valider'])) valider_reponse(); //btn valider a été cliqué
+        elseif (isset($_POST['btn_abandonner'])) abandonner_partie(); //btn abandonner a été cliqué
+        else header('location: index.php?erreur=-1');
+        break;
+      case 'rejouer':
+        header('location: index.php');
         break;
     }
   }
@@ -192,6 +197,25 @@ function logout_user() {
   } else {
     header('location: index.php?erreur_log=-6');
   }
+}
+
+function abandonner_partie() {
+  if (!isset($_SESSION['utilisateur'])) {
+    header('location: index.php?erreur_log=-6');
+    die();
+  }
+
+  if (isset($_POST['mot_ordonne'])) {
+    $mot_ordonne = $_POST['mot_ordonne'];
+    
+    require_once('users.php');
+
+    $rez = ajouter_abandon_utilisateur($_SESSION['utilisateur']);
+
+    if ($rez == 1) header('location: index.php?info=3&solution='.$mot_ordonne);
+    else header('location: index.php?erreur=-7&solution='.mot_ordonne);
+
+  } else header('location: index.php?erreur_log=-2');
 }
 
 
