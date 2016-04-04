@@ -115,4 +115,17 @@ function ajouter_abandon_utilisateur($log) {
   } else return -1;
 }
 
+function get_scores() {
+  if (($handle = fopen("db/utilisateurs.csv", "r")) !== FALSE) {
+    $scores = array();
+
+    while (($data = fgetcsv($handle, 50)) !== FALSE) {
+      unset($data[1]); // on ne retourne pas les mots de passe
+      array_push($scores, $data);
+    }
+    fclose($handle);
+
+    return $scores;
+  } return -1;
+}
 ?>

@@ -6,14 +6,14 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Anagramme, The Game</title>
+  <title>Anagramme, Le Jeu</title>
   <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
 
 
 <body>
   <div id="page">
-    <div id="head_titre">Anagramme, The Game</div>
+    <div id="head_titre">Anagramme, Le Jeu</div>
 
     <div id="login">
 
@@ -139,7 +139,7 @@
           <input type="hidden" name="mot_ordonne" value="<?php echo implode($new_mot_ordonne); ?>" /><br />
 
           <div class="game_reponse_btns">
-            
+
 <?php   if (isset($_SESSION['utilisateur'])) { ?>
 
             <input type="submit" name="btn_abandonner" value="Abandonner" />
@@ -215,6 +215,9 @@
 ?>
           </div>
         </div>
+
+        <a class="scores" href="scores.php">Voir les scores</a>
+
       </div>
     </div>
   </div>

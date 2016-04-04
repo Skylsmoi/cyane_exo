@@ -87,3 +87,32 @@ body {
   text-transform: uppercase;
 }
 .input_reponse {}
+#lien_jeu {
+  margin: 0 0 25px 0;
+  text-align: center;
+}
+.un_score {
+  margin: 0 0 40px 40px;
+}
+.un_score_user {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  font-size: 18px;
+}
+.un_score_info {
+  margin-left: 40px;
+}
+.un_score_label {
+  display: inline-block;
+  width: 155px;
+}
+.un_score_label_user {
+  display: inline-block;
+  width: 110px;
+}
+.un_score_donnee {
+  display: inline-block;
+}
+#scores .erreur {
+  text-align: center;
+}
