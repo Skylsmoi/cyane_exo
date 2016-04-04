@@ -9,7 +9,7 @@ function load_bdd_utilisateurs_json() {
 function creer_utilisateur($log, $mdp) {
   // on ouvre le fichier utilisateurs en mode "a", write only, ce qui place la tête de lecture en fin de fichier
   if (($handle = fopen("db/utilisateurs.csv", "a")) !== FALSE) {
-    if (fputcsv($handle, array($log, $mdp, 0, 0, 0)) != FALSE) {
+    if (fputcsv($handle, array($log, md5($mdp), 0, 0, 0)) != FALSE) {
       fclose($handle);
       return 1;
     } else return -2; //erreur, impossible d'écrire dans le fichier d'utilisateurs
@@ -48,6 +48,7 @@ Retourne :
 0 sinon
 */
 function valider_login_mdp($log, $mdp) {
+  $mdp = md5($mdp);
   if (($handle = fopen("db/utilisateurs.csv", "r")) !== FALSE) {
     while (($data = fgetcsv($handle, 50)) !== FALSE) {
       if ($data[0] === $log && $data[1] === $mdp) {
