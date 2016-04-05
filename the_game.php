@@ -28,14 +28,17 @@ if (isset($_GET["action"])) {
 }
 
 
-function load_bdd() {
-  $file = "db/lexique.json";
-  return json_decode(file_get_contents($file));
+// a partir de là il n'y a que des fonctions non executées automatiquement
+//on récupère le contenu du tableau
+function load_bdd() { // on déclare la fonction
+  $file = "db/lexique.json"; //on assigne une chaine à une variable
+  $contenu = file_get_contents($file); //on assigne le contenu du lexique à la variable $contenu
+  $array_lexique = json_decode($contenu); //on convertit le lexique en tableau
+  return $array_lexique;
 }
 
 function load_random_mot($lexique) {
-  //return str_split($lexique[2]); // ligne de debug pour le mot "abaisse"
-  return str_split($lexique[rand(0, count($lexique))]);
+  return str_split($lexique[rand(0, count($lexique))]); //on va aller chercher dans le lexique un mot aléatoirement 
 }
 
 function valider_reponse() {
@@ -123,8 +126,8 @@ function valider_caracteres($rep, $mot) {
 
 function creation_utilisateur() {
   if (!isset($_POST['login']) || !isset($_POST['mdp']) || !isset($_POST['mdp_verif'])) {
-    header('location: index.php?erreur_log=-1'); // erreur de param
-    die();
+    header('location: index.php?erreur_log=-1'); // erreur de param on va changer de page
+    die(); //on arrete l'execution du code, sinon ça execute tout et on veut pas
   }
 
   $log = htmlspecialchars($_POST['login']);
@@ -171,19 +174,15 @@ function login_user() {
     $mdp = htmlspecialchars($_POST['mdp']);
 
     require_once('users.php');
-    echo 'woot';
+
     if ($result = valider_login_mdp($log, $mdp) === 1) {
-      echo '1';
-      $_SESSION['utilisateur'] = $log;
+      $_SESSION['utilisateur'] = $log;// on connecte l'utilisateur
       header('location: index.php');
     } else if ($result == 0) {
-      echo '2';
       header('location: index.php?erreur_log=-7');
     } else if ($result === -1) {
-      echo '3';
       header('location: index.php?erreur_log=-8');
     }
-    var_dump($result);
   }
 }
 

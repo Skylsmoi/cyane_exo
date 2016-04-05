@@ -1,15 +1,9 @@
 <?php
 
-//deprecated
-function load_bdd_utilisateurs_json() {
-  $file = "db/utilisateurs.json";
-  return json_decode(file_get_contents($file));
-}
-
 function creer_utilisateur($log, $mdp) {
   // on ouvre le fichier utilisateurs en mode "a", write only, ce qui place la tête de lecture en fin de fichier
   if (($handle = fopen("db/utilisateurs.csv", "a")) !== FALSE) {
-    if (fputcsv($handle, array($log, md5($mdp), 0, 0, 0)) != FALSE) {
+    if (fputcsv($handle, array($log, md5($mdp), 0, 0, 0)) != FALSE) { //000 pour initialiser à zero les scores, nb parties etc
       fclose($handle);
       return 1;
     } else return -2; //erreur, impossible d'écrire dans le fichier d'utilisateurs
@@ -79,7 +73,7 @@ function ajouter_points_utilisateur($log, $nb_pts) {
         $data[2]++; // on ajoute 1 au nombre de parties jouées
         if ($nb_pts > $data[4]) $data[4] = $nb_pts; // on assigne le meilleur score
       }
-      array_push($new_db, $data);
+      array_push($new_db, $data);// je met les maj de l'utilisateur dans new_db
     }
     fclose($handle);
 

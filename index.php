@@ -1,6 +1,6 @@
 <?php
   require_once('the_game.php');
-  $lexique = load_bdd(); // initialisation de la bdd
+  $lexique = load_bdd(); // initialisation de la base de données (le lexique)
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,7 +17,10 @@
 
     <div id="login">
 
-<?php if (isset($_GET['new_user']) && !isset($_SESSION['utilisateur'])) { ?>
+<?php 
+//on ne génère le html seulement si "new_user" est dans l'url si une session n'est pas deja ouverte
+if (isset($_GET['new_user']) && !isset($_SESSION['utilisateur'])) {
+?> 
 
       <div class="login_title">
         Crée ton compte :<br />
@@ -38,7 +41,8 @@
         <input type="submit" value="Créer" />
       </form>
 
-<?php } else if (isset($_SESSION['utilisateur']) && $_SESSION['utilisateur'] != "") { ?>
+<?php // si une session est ouverte on génère le code html ci après
+} else if (isset($_SESSION['utilisateur']) && $_SESSION['utilisateur'] != "") { ?>
 
       <div class="login_title">
         Tu es connecté au compte de <?php echo $_SESSION['utilisateur'] ?>.<br />
@@ -82,7 +86,7 @@
         echo 'Tu es maintenant déconnecté.';
         break;
       case -1:
-        echo 'Erreur interne, données du formulaire enovyées invalide. Requis : $_POST["login"], $_POST["mdp"] et $_POST["mdp_verif"]';
+        echo 'Erreur interne, données du formulaire envoyées invalide. Requis : $_POST["login"], $_POST["mdp"] et $_POST["mdp_verif"]';
         break;
       case -2:
         echo 'La vérification de votre mot de passe est différente.';
@@ -121,7 +125,7 @@
     $new_mot_ordonne = $new_mot; //sauvegarde dans une autre variable le mot encore ordonné
     shuffle($new_mot); // désordonne le mot
     $nb_lettres = count($new_mot); // compte le nombre de caractères du mot
-    for ($i = 0; $i < $nb_lettres; $i++) {
+    for ($i = 0; $i < $nb_lettres; $i++) { // boucle de 0 à nombre de lettre 
       echo  '
           <div class="une_option">'.$new_mot[$i].'</div>';
     }
@@ -201,7 +205,7 @@
     switch ($info) {
       case 1:
         $nb_pts = htmlspecialchars($_GET['nb_pts']);
-        echo 'Félicitation, tu as trouvé le mot. Tu as gagné '.$nb_pts.' pts.';
+        echo 'Félicitations, tu as trouvé le mot. Tu as gagné '.$nb_pts.' pts.';
         break;
       case 2:
         $nb_pts = htmlspecialchars($_GET['nb_pts']);
